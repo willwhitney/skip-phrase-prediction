@@ -11,19 +11,23 @@ cmd:option('--checkpoint_dir', 'networks', 'output directory where checkpoints g
 cmd:option('--import', '', 'initialize network parameters from checkpoint at this path')
 
 -- data
-cmd:option('--datasetdir', 'datasets/CBT', 'dataset source directory')
-cmd:option('--frame_interval', 1, 'the number of timesteps between input[1] and input[2]')
+cmd:option('--datasetdir', 'datasets/CB', 'dataset source directory')
+
+
+cmd:option('--n_context', 10, 'number of words to see before the skip')
+cmd:option('--n_skip', 10, 'number of words to skip')
+cmd:option('--n_predict', 10, 'number of words to predict after the skip')
+
 
 -- optimization
-cmd:option('--learning_rate', 1e-4, 'learning rate')
+cmd:option('--learning_rate', 1e-3, 'learning rate')
 cmd:option('--learning_rate_decay', 0.97, 'learning rate decay')
-cmd:option('--learning_rate_decay_after', 18000, 'in number of examples, when to start decaying the learning rate')
-cmd:option('--learning_rate_decay_interval', 4000, 'in number of examples, how often to decay the learning rate')
+cmd:option('--learning_rate_decay_after', 50000, 'in number of examples, when to start decaying the learning rate')
+cmd:option('--learning_rate_decay_interval', 10000, 'in number of examples, how often to decay the learning rate')
 cmd:option('--decay_rate', 0.95, 'decay rate for rmsprop')
 cmd:option('--grad_clip', 3, 'clip gradients at this value')
 
 cmd:option('--dim_hidden', 200, 'dimension of the representation layer')
-
 cmd:option('--max_epochs', 50, 'number of full passes through the training data')
 
 -- bookkeeping
@@ -32,7 +36,7 @@ cmd:option('--print_every', 1, 'how many steps/minibatches between printing out 
 cmd:option('--eval_val_every', 9000, 'every how many iterations should we evaluate on validation data?')
 
 -- GPU/CPU
-cmd:option('--gpu', false, 'whether to use GPU')
+cmd:option('--gpuid', -1, 'which GPU to use')
 cmd:text()
 
 
@@ -40,9 +44,11 @@ cmd:text()
 opt = cmd:parse(arg)
 torch.manualSeed(opt.seed)
 
-if opt.gpu then
+if opt.gpuid >= 0 then
     require 'cutorch'
     require 'cunn'
+
+    cutorch.setDevice(opt.gpuid)
 end
 
 if opt.name == 'net' then
@@ -78,18 +84,25 @@ print = function(...)
     logfile:flush()
 end
 
+-- only needs to be run once to build the vocab
+-- Loader.text_to_tensor(
+--     {'datasets/CB/train.txt', 'datasets/CB/val.txt', 'datasets/CB/test.txt'},
+--     'datasets/CB/vocab.t7',
+--     {'datasets/CB/train.t7', 'datasets/CB/val.t7', 'datasets/CB/test.t7'})
+
 local trainDataLoader = Loader.create(opt.datasetdir, 'train', opt.n_context, opt.n_skip, opt.n_predict)
 local valDataLoader = Loader.create(opt.datasetdir, 'val', opt.n_context, opt.n_skip, opt.n_predict)
 
-local vocab_size = trainDataLoader.vocab_size
+local vocab_size = trainDataLoader.vocab_size -- this is the same for each loader
+print("Vocab size: ", vocab_size)
 
-model = nn.SkipLSTM(vocab_size, opt.dim_hidden, opt.n_context, opt.n_predict)
+model = SkipLSTM(vocab_size, opt.dim_hidden, opt.n_context, opt.n_predict)
 
 print(model)
 
 local criterion = nn.ClassNLLCriterion()
 
-if opt.gpu then
+if opt.gpuid >= 0 then
     model:cuda()
     criterion:cuda()
 end
@@ -105,6 +118,11 @@ function validate()
     for i = 1, valDataLoader.data:size(1) do -- iterate over batches in the split
         -- fetch a batch
         local input, target = valDataLoader:load_batch(i)
+
+        if opt.gpuid >= 0 then
+            input = input:cuda()
+            target = target:cuda()
+        end
 
         local output = model:forward(input)
         step_loss = criterion:forward(output, target)
@@ -125,13 +143,21 @@ function feval(x)
     grad_params:zero()
 
     ------------------ get minibatch -------------------
-    local input, target = trainDataLoader.load_random_batch()
+    local input, target = trainDataLoader:load_random_batch()
 
+    if opt.gpuid >= 0 then
+        input = input:cuda()
+        target = target:cuda()
+    end
+    -- print("input", input)
+    -- print("")
     ------------------- forward pass -------------------
     model:training() -- make sure we are in correct mode
 
     local loss
     local output = model:forward(input)
+    -- print(output:size())
+    -- print(target)
     loss = criterion:forward(output, target)
 
     local grad_output = criterion:backward(output, target)
@@ -147,14 +173,14 @@ end
 train_losses = {}
 val_losses = {}
 local optim_state = {learningRate = opt.learning_rate, alpha = opt.decay_rate}
-local iterations = opt.max_epochs * opt.num_train_batches
+local iterations = opt.max_epochs * trainDataLoader.data:size(1)
 -- local iterations_per_epoch = opt.num_train_batches
 local loss0 = nil
 
 -- print(cutorch.getMemoryUsage(cutorch.getDevice()))
 
 for step = 1, iterations do
-    epoch = step / opt.num_train_batches
+    epoch = step / trainDataLoader.data:size(1)
 
     local timer = torch.Timer()
 

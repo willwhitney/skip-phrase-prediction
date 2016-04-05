@@ -25,6 +25,8 @@ function Loader.create(data_dir, input_filename, n_context, n_skip, n_predict)
     self.inverse_word_mappings = self.vocabulary.inverse_word_mappings
     self.vocab_size = #self.inverse_word_mappings
 
+    -- print(self.word_mappings["<PREDICT>"])
+
     -- cut off the end so that it divides evenly
     local len = data:size(1)
     if len % seq_length ~= 0 then
@@ -42,7 +44,7 @@ function Loader:load_batch(id)
     local batch = self.data[id]
     local x = torch.Tensor(self.n_context + self.n_predict)
     x[{{1, self.n_context}}] = batch[{{1, self.n_context}}]
-    x[self.n_context + 1] = 0
+    x[self.n_context + 1] = self.word_mappings["<PREDICT>"]
     x[{{self.n_context + 2, x:size(1)}}] = batch[{{self.n_context + self.n_skip + 1, batch:size(1) - 1}}]
     local y = batch[{{self.n_context + self.n_skip + 1, batch:size(1)}}]
     return x, y
@@ -59,12 +61,13 @@ function Loader.text_to_tensor(in_textfiles, out_vocabfile, out_tensorfiles, min
     -- create vocabulary if it doesn't exist yet
     print('creating vocabulary mapping...')
 
-    local total_words = 0
+    local total_words = {}
     local word_counts = {}
     for _, in_textfile in ipairs(in_textfiles) do
+        local file_words = 0
         for line in io.lines(in_textfile) do
             for _, word in ipairs(line:split(' ')) do
-                total_words = total_words + 1
+                file_words = file_words + 1
                 if word_counts[word] == nil then
                     word_counts[word] = 1
                 else
@@ -72,12 +75,16 @@ function Loader.text_to_tensor(in_textfiles, out_vocabfile, out_tensorfiles, min
                 end
             end
         end
+        table.insert(total_words, file_words)
     end
 
     local word_mappings = {}
     local inverse_word_mappings = {}
-    word_mappings["<UNK>"] = 1
-    inverse_word_mappings[1] = "<UNK>"
+    word_mappings["<PREDICT>"] = 1
+    inverse_word_mappings[1] = "<PREDICT>"
+
+    word_mappings["<UNK>"] = 2
+    inverse_word_mappings[2] = "<UNK>"
 
     for word, count in pairs(word_counts) do
         if count >= min_occurrence then
@@ -92,13 +99,15 @@ function Loader.text_to_tensor(in_textfiles, out_vocabfile, out_tensorfiles, min
     for input_index, in_textfile in ipairs(in_textfiles) do
         -- construct a tensor with all the data
         print('putting data into tensor...')
-        local data = torch.Tensor(total_words) -- store it into 1D first, then rearrange
+
+        -- store it into 1D first, then rearrange
+        local data = torch.Tensor(total_words[input_index])
 
         local current = 1
         for line in io.lines(in_textfile) do
             for _, word in ipairs(line:split(' ')) do
                 -- the ID for the word is 1 (for <UNK>) if it's not in the list
-                local word_id = word_mappings[word] or 1
+                local word_id = word_mappings[word] or word_mappings["<UNK>"]
 
                 data[current] = word_id
                 current = current + 1
