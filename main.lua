@@ -2,7 +2,7 @@ require 'nn'
 require 'optim'
 
 local SkipLSTM = require 'SkipLSTM'
-local data_loaders = require 'data_loaders'
+local Loader = require 'Loader'
 
 local cmd = torch.CmdLine()
 
@@ -11,8 +11,7 @@ cmd:option('--checkpoint_dir', 'networks', 'output directory where checkpoints g
 cmd:option('--import', '', 'initialize network parameters from checkpoint at this path')
 
 -- data
-cmd:option('--datasetdir', '/om/user/wwhitney/deep-game-engine', 'dataset source directory')
-cmd:option('--dataset_name', 'breakout', 'dataset source directory')
+cmd:option('--datasetdir', 'datasets/CBT', 'dataset source directory')
 cmd:option('--frame_interval', 1, 'the number of timesteps between input[1] and input[2]')
 
 -- optimization
@@ -31,10 +30,6 @@ cmd:option('--max_epochs', 50, 'number of full passes through the training data'
 cmd:option('--seed', 123, 'torch manual random number generator seed')
 cmd:option('--print_every', 1, 'how many steps/minibatches between printing out the loss')
 cmd:option('--eval_val_every', 9000, 'every how many iterations should we evaluate on validation data?')
-
--- data
-cmd:option('--num_train_batches', 8000, 'number of batches to train with per epoch')
-cmd:option('--num_test_batches', 900, 'number of batches to test with')
 
 -- GPU/CPU
 cmd:option('--gpu', false, 'whether to use GPU')
@@ -83,6 +78,10 @@ print = function(...)
     logfile:flush()
 end
 
+local trainDataLoader = Loader.create(opt.datasetdir, 'train', opt.n_context, opt.n_skip, opt.n_predict)
+local valDataLoader = Loader.create(opt.datasetdir, 'val', opt.n_context, opt.n_skip, opt.n_predict)
+
+local vocab_size = trainDataLoader.vocab_size
 
 model = nn.SkipLSTM(vocab_size, opt.dim_hidden, opt.n_context, opt.n_predict)
 
@@ -103,9 +102,9 @@ function validate()
     local loss = 0
     model:evaluate()
 
-    for i = 1, opt.num_test_batches do -- iterate over batches in the split
+    for i = 1, valDataLoader.data:size(1) do -- iterate over batches in the split
         -- fetch a batch
-        local input, target = data_loaders.load_batch(i, 'validate')
+        local input, target = valDataLoader:load_batch(i)
 
         local output = model:forward(input)
         step_loss = criterion:forward(output, target)
@@ -126,7 +125,7 @@ function feval(x)
     grad_params:zero()
 
     ------------------ get minibatch -------------------
-    local input, target = data_loaders.load_random_batch('train')
+    local input, target = trainDataLoader.load_random_batch()
 
     ------------------- forward pass -------------------
     model:training() -- make sure we are in correct mode
