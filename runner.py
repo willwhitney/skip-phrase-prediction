@@ -19,7 +19,7 @@ base_networks = {
     }
 
 
-free_gpus = range(8)
+free_gpus = [0,2,3,4,5,6,7]
 
 jobs = []
 
@@ -75,14 +75,15 @@ for job in jobs:
             flagstring = flagstring + " --" + flag + " " + str(job[flag])
     flagstring = flagstring + " --name " + jobname
 
-    jobcommand = "th atari_main.lua" + flagstring
+    jobcommand = "th main.lua" + flagstring
 
     print(jobcommand)
-    if local and not dry_run:
-        if detach:
-            os.system(jobcommand + ' 2> logs/' + jobname + '.err 1> logs/' + jobname + '.out &')
-        else:
-            os.system(jobcommand)
+    if local
+        if not dry_run:
+            if detach:
+                os.system(jobcommand + ' 2> logs/' + jobname + '.err 1> logs/' + jobname + '.out &')
+            else:
+                os.system(jobcommand)
 
     else:
         with open('slurm_scripts/' + jobname + '.slurm', 'w') as slurmfile:

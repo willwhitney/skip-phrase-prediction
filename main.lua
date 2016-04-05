@@ -33,7 +33,7 @@ cmd:option('--max_epochs', 50, 'number of full passes through the training data'
 -- bookkeeping
 cmd:option('--seed', 123, 'torch manual random number generator seed')
 cmd:option('--print_every', 1, 'how many steps/minibatches between printing out the loss')
-cmd:option('--eval_val_every', 9000, 'every how many iterations should we evaluate on validation data?')
+cmd:option('--eval_val_every', 20000, 'every how many iterations should we evaluate on validation data?')
 
 -- GPU/CPU
 cmd:option('--gpuid', -1, 'which GPU to use')
