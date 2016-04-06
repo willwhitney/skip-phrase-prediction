@@ -27,7 +27,7 @@ cmd:option('--learning_rate_decay_interval', 10000, 'in number of examples, how 
 cmd:option('--decay_rate', 0.95, 'decay rate for rmsprop')
 cmd:option('--grad_clip', 3, 'clip gradients at this value')
 
-cmd:option('--dim_hidden', 200, 'dimension of the representation layer')
+cmd:option('--dim_hidden', 100, 'dimension of the representation layer')
 cmd:option('--max_epochs', 50, 'number of full passes through the training data')
 
 -- bookkeeping
@@ -36,7 +36,7 @@ cmd:option('--print_every', 1, 'how many steps/minibatches between printing out 
 cmd:option('--eval_val_every', 20000, 'every how many iterations should we evaluate on validation data?')
 
 -- GPU/CPU
-cmd:option('--gpuid', -1, 'which GPU to use')
+cmd:option('--gpu', false, 'which GPU to use')
 cmd:text()
 
 
@@ -44,11 +44,9 @@ cmd:text()
 opt = cmd:parse(arg)
 torch.manualSeed(opt.seed)
 
-if opt.gpuid >= 0 then
+if opt.gpu then
     require 'cutorch'
     require 'cunn'
-
-    cutorch.setDevice(opt.gpuid)
 end
 
 if opt.name == 'net' then
@@ -102,7 +100,7 @@ print(model)
 
 local criterion = nn.ClassNLLCriterion()
 
-if opt.gpuid >= 0 then
+if opt.gpu then
     model:cuda()
     criterion:cuda()
 end
@@ -119,7 +117,7 @@ function validate()
         -- fetch a batch
         local input, target = valDataLoader:load_batch(i)
 
-        if opt.gpuid >= 0 then
+        if opt.gpu then
             input = input:cuda()
             target = target:cuda()
         end
@@ -130,7 +128,7 @@ function validate()
         loss = loss + step_loss
     end
 
-    loss = loss / opt.num_test_batches
+    loss = loss / valDataLoader.data:size(1)
     return loss
 end
 
@@ -145,7 +143,7 @@ function feval(x)
     ------------------ get minibatch -------------------
     local input, target = trainDataLoader:load_random_batch()
 
-    if opt.gpuid >= 0 then
+    if opt.gpu then
         input = input:cuda()
         target = target:cuda()
     end
