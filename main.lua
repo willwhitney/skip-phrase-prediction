@@ -93,6 +93,8 @@ local valDataLoader = Loader.create(opt.datasetdir, 'val', opt.n_context, opt.n_
 
 local vocab_size = trainDataLoader.vocab_size -- this is the same for each loader
 print("Vocab size: ", vocab_size)
+print("Training size: ", trainDataLoader.data:size(1))
+print("Validation size: ", valDataLoader.data:size(1))
 
 model = SkipLSTM(vocab_size, opt.dim_hidden, opt.n_context, opt.n_predict)
 

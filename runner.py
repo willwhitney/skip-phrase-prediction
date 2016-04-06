@@ -18,12 +18,12 @@ base_networks = {
     }
 
 
-# free_gpus = [0,2,3,4,5,6,7]
-free_gpus = range(8)
+free_gpus = [0,1,2,3,4,5,7]
+# free_gpus = range(8)
 
 jobs = []
 
-learning_rate_options = [3e-3, 1e-3, 1e-4]
+learning_rate_options = [1e-3, 1e-4]
 spacing_options = [
         (10,1,10),
         # (10,5,10),
@@ -38,6 +38,7 @@ for learning_rate in learning_rate_options:
                 "n_predict": spacing[2],
                 "learning_rate": learning_rate,
 
+                "dim_hidden": 1000,
                 "gpu": gpu,
             }
         jobs.append(job)
