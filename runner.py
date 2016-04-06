@@ -18,16 +18,16 @@ base_networks = {
     }
 
 
-free_gpus = [0,1,2,3,4,5,7]
+free_gpus = [7]
 # free_gpus = range(8)
 
 jobs = []
 
-learning_rate_options = [1e-3, 1e-4]
+learning_rate_options = [1e-4]
 spacing_options = [
-        (10,1,10),
+        (10,0,10),
         # (10,5,10),
-        (10,10,10),
+        # (10,10,10),
     ]
 
 for learning_rate in learning_rate_options:

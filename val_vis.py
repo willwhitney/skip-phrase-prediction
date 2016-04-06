@@ -1,3 +1,7 @@
+import matplotlib
+# Force matplotlib to not use any Xwindows backend.
+matplotlib.use('Agg')
+
 import numpy as np
 import pandas as pd
 # from matplotlib import pyplot as plt
@@ -8,7 +12,6 @@ import os
 import copy
 import pprint
 from matplotlib import gridspec
-
 import argparse
 
 parser = argparse.ArgumentParser(description='Plot dem results.')
