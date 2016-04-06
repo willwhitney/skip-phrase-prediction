@@ -15,7 +15,7 @@ local SkipLSTM = function(vocab_size, hidden_size, n_context, n_predict)
     -- block1:add(nn.Print('after LSTM'))
     -- block1:add(nn.Reshape(1, hidden_size))
     block1:add(nn.JoinTable(1))
-    block1:add(nn.Print('after join'))
+    -- block1:add(nn.Print('after join'))
 
     model:add(block1)
     -- model:add(nn.Reshape(n_context + n_predict, hidden_size))
@@ -30,6 +30,7 @@ local SkipLSTM = function(vocab_size, hidden_size, n_context, n_predict)
     block2:add(nn.Narrow(1, n_context + 1, n_predict))
     block2:add(nn.Linear(hidden_size, vocab_size))
     block2:add(nn.LogSoftMax())
+    -- block2:add(nn.Print('after softmax'))
     model:add(block2)
     return model
 end

@@ -47,6 +47,9 @@ function Loader:load_batch(id)
     x[self.n_context + 1] = self.word_mappings["<PREDICT>"]
     x[{{self.n_context + 2, x:size(1)}}] = batch[{{self.n_context + self.n_skip + 1, batch:size(1) - 1}}]
     local y = batch[{{self.n_context + self.n_skip + 1, batch:size(1)}}]
+    -- print(x:size(1))
+    x = x:reshape(1, x:size(1))
+    -- y = y:reshape(1, y:size(1))
     return x, y
 end
 
