@@ -10,7 +10,7 @@ local Loader = require 'Loader'
 local network_name = arg[1]
 local context_string = arg[2]
 local temperature = arg[3]
-
+print(context_string)
 local base_directory = 'networks'
 
 function getLastSnapshot(network_name)
@@ -27,11 +27,13 @@ local checkpoint = torch.load(path.join(base_directory, network_name, last_snaps
 local model = checkpoint.model
 opt = checkpoint.opt
 
+print(model)
+
 -- we'll just use this for the vocab mappings
-local loader = Loader(opt.datasetdir, 'train', opt.n_context, opt.n_skip, opt.n_predict)
+local loader = Loader.create(opt.datasetdir, 'train', opt.n_context, opt.n_skip, opt.n_predict)
 
 local inputs = {}
-for word in context_string:split(' ') do
+for _, word in ipairs(context_string:split(' ')) do
     table.insert(inputs, loader.word_mappings[word])
 end
 
