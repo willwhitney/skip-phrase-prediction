@@ -19,7 +19,7 @@ parser.add_argument('--name', default='default')
 # parser.add_argument('--keep_losers', default=False)
 parser.add_argument('--hide_losers', action='store_true', default=False)
 parser.add_argument('--keep_young', action='store_true', default=False)
-parser.add_argument('--loser_threshold', default=1)
+parser.add_argument('--loser_threshold', type=float, default=1)
 args = parser.parse_args()
 
 output_dir = "reports/" + args.name
