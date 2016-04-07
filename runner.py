@@ -18,16 +18,16 @@ base_networks = {
     }
 
 
-free_gpus = [7]
-# free_gpus = range(8)
+# free_gpus = [7]
+free_gpus = range(8)
 
 jobs = []
 
-learning_rate_options = [1e-4]
+learning_rate_options = [1e-4, 3e-5]
 spacing_options = [
         (10,0,10),
-        # (10,5,10),
-        # (10,10,10),
+        (10,3,10),
+        (10,10,10),
     ]
 
 for learning_rate in learning_rate_options:
@@ -39,6 +39,7 @@ for learning_rate in learning_rate_options:
                 "learning_rate": learning_rate,
 
                 "dim_hidden": 1000,
+                "sed_layers": 2,
                 "gpu": gpu,
             }
         jobs.append(job)
@@ -58,14 +59,19 @@ for job in jobs:
     jobname = "skip"
     flagstring = ""
     for flag in job:
+        # flags that start with an underscore are hidden
         if flag[0] == '_':
             continue
+
+        # boolean flags are just flags, they have no argument
         if isinstance(job[flag], bool):
             if job[flag]:
                 jobname = jobname + "_" + flag
                 flagstring = flagstring + " --" + flag
             else:
                 print "WARNING: Excluding 'False' flag " + flag
+
+        # base_networks lets us define nets to import without fully-qualified paths
         elif flag == 'import':
             imported_network_name = job[flag]
             if imported_network_name in base_networks.keys():
@@ -75,6 +81,7 @@ for job in jobs:
             else:
                 jobname = jobname + "_" + flag + "_" + str(job[flag])
                 flagstring = flagstring + " --" + flag + " " + networks_prefix + "/" + str(job[flag])
+
         else:
             jobname = jobname + "_" + flag + "_" + str(job[flag])
             flagstring = flagstring + " --" + flag + " " + str(job[flag])
@@ -90,4 +97,3 @@ for job in jobs:
             os.system(jobcommand + ' 2> logs/' + jobname + '.err 1> logs/' + jobname + '.out &')
         else:
             os.system(jobcommand)
-

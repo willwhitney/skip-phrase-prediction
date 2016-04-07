@@ -53,6 +53,24 @@ function Loader:load_batch(id)
     return x, y
 end
 
+function Loader:load_batch_table(id)
+    local batch = self.data[id]
+    local x = {}
+
+    -- the part that goes to the encoder
+    table.insert(x, batch[{{1, self.n_context}}]:reshape(1, self.n_context))
+
+    -- the part that goes to the decoder
+    table.insert(x, batch[{{self.n_context + self.n_skip + 1, batch:size(1) - 1}}]:reshape(1, self.n_predict - 1))
+
+    local y = batch[{{self.n_context + self.n_skip + 1, batch:size(1)}}]
+    return x, y
+end
+
+function Loader:load_random_batch_table()
+    return self:load_batch_table(math.random(1, self.data:size(1)))
+end
+
 function Loader:load_random_batch()
     return self:load_batch(math.random(1, self.data:size(1)))
 end

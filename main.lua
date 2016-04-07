@@ -2,6 +2,7 @@ require 'nn'
 require 'optim'
 
 local SkipLSTM = require 'SkipLSTM'
+local SkipEncoderDecoder = require 'SkipEncoderDecoder'
 local Loader = require 'Loader'
 
 local cmd = torch.CmdLine()
@@ -9,6 +10,11 @@ local cmd = torch.CmdLine()
 cmd:option('--name', 'net', 'filename to autosave the checkpont to. Will be inside checkpoint_dir/')
 cmd:option('--checkpoint_dir', 'networks', 'output directory where checkpoints get written')
 cmd:option('--import', '', 'initialize network parameters from checkpoint at this path')
+
+
+cmd:option('--model', 'lstm', 'lstm for SkipLSTM, sed for SkipEncoderDecoder')
+cmd:option('--sed_layers', 1, 'number of LSTM layers to use in SED')
+
 
 -- data
 cmd:option('--datasetdir', 'datasets/CB', 'dataset source directory')
@@ -36,7 +42,7 @@ cmd:option('--print_every', 1, 'how many steps/minibatches between printing out 
 cmd:option('--eval_val_every', 20000, 'every how many iterations should we evaluate on validation data?')
 
 -- GPU/CPU
-cmd:option('--gpu', false, 'which GPU to use')
+cmd:option('--gpu', false, 'whether to use the GPU')
 cmd:text()
 
 
@@ -96,7 +102,13 @@ print("Vocab size: ", vocab_size)
 print("Training size: ", trainDataLoader.data:size(1))
 print("Validation size: ", valDataLoader.data:size(1))
 
-model = SkipLSTM(vocab_size, opt.dim_hidden, opt.n_context, opt.n_predict)
+if opt.model == 'lstm' then
+    model = SkipLSTM(vocab_size, opt.dim_hidden, opt.n_context, opt.n_predict)
+elseif opt.model == 'sed' then
+    model = SkipEncoderDecoder(vocab_size, opt.dim_hidden, opt.sed_layers)
+else
+    error("Model type not found.")
+end
 
 print(model)
 
@@ -117,7 +129,12 @@ function validate()
 
     for i = 1, valDataLoader.data:size(1) do -- iterate over batches in the split
         -- fetch a batch
-        local input, target = valDataLoader:load_batch(i)
+        local input, target
+        if opt.model == 'lstm' then
+            input, target = valDataLoader:load_batch(i)
+        else
+            input, target = valDataLoader:load_batch_table(i)
+        end
 
         if opt.gpu then
             input = input:cuda()
@@ -143,7 +160,12 @@ function feval(x)
     grad_params:zero()
 
     ------------------ get minibatch -------------------
-    local input, target = trainDataLoader:load_random_batch()
+    local input, target
+    if opt.model == 'lstm' then
+        input, target = trainDataLoader:load_random_batch()
+    else
+        input, target = trainDataLoader:load_random_batch_table()
+    end
 
     if opt.gpu then
         input = input:cuda()
