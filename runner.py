@@ -40,6 +40,7 @@ for learning_rate in learning_rate_options:
 
                 "dim_hidden": 1000,
                 "sed_layers": 2,
+                "model": "sed",
                 "gpu": gpu,
             }
         jobs.append(job)

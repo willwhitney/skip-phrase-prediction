@@ -137,7 +137,10 @@ function validate()
         end
 
         if opt.gpu then
-            input = input:cuda()
+            input = {
+                    input[1]:cuda(),
+                    input[2]:cuda(),
+                }
             target = target:cuda()
         end
 
@@ -168,7 +171,10 @@ function feval(x)
     end
 
     if opt.gpu then
-        input = input:cuda()
+        input = {
+                input[1]:cuda(),
+                input[2]:cuda(),
+            }
         target = target:cuda()
     end
     -- print("input", input)

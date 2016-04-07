@@ -1,8 +1,8 @@
 require 'nn'
 require 'optim'
 
--- require 'cutorch'
--- require 'cunn'
+require 'cutorch'
+require 'cunn'
 
 local SkipEncoderDecoder = require 'SkipEncoderDecoder'
 local Loader = require 'Loader'
