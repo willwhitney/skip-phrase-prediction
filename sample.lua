@@ -2,7 +2,7 @@ require 'nn'
 require 'optim'
 
 -- require 'cutorch'
--- require 'cunn'
+require 'cunn'
 
 local SkipLSTM = require 'SkipLSTM'
 local Loader = require 'Loader'

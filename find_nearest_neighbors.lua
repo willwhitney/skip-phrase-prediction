@@ -4,74 +4,96 @@ require 'optim'
 require 'cutorch'
 require 'cunn'
 
-local SkipEncoderDecoder = require 'SkipEncoderDecoder'
-local Loader = require 'Loader'
+SkipEncoderDecoder = require 'SkipEncoderDecoder'
+Loader = require 'Loader'
 
-local network_name = arg[1]
--- local context_string = arg[2]
--- local temperature = arg[3]
+-- local seed = torch.random()
+-- print("Random seed: ", seed)
+-- math.randomseed(seed)
 
-local base_directory = 'networks'
+network_name = arg[1]
+context_string = arg[2]
+-- temperature = arg[3]
+
+base_directory = 'networks'
 
 function getLastSnapshot(name)
-    local res_file = io.popen("ls -t "..paths.concat(base_directory, name).." | grep -i epoch | head -n 1")
-    local result = res_file:read():match( "^%s*(.-)%s*$" )
+    res_file = io.popen("ls -t "..paths.concat(base_directory, name).." | grep -i epoch | head -n 1")
+    result = res_file:read():match( "^%s*(.-)%s*$" )
     res_file:close()
     return result
 end
 
-local last_snapshot = getLastSnapshot(network_name)
-local checkpoint = torch.load(path.join(base_directory, network_name, last_snapshot))
+last_snapshot = getLastSnapshot(network_name)
+checkpoint = torch.load(path.join(base_directory, network_name, last_snapshot))
 opt = checkpoint.opt
 
-local model = checkpoint.model
+model = checkpoint.model
 
--- local sequencer = model:findModules('nn.Sequencer')[2]
+-- sequencer = model:findModules('nn.Sequencer')[2]
 -- sequencer:remember()
 
-local encoder = model:findModules('nn.Sequential')[3]
--- local decoder = model.modules[#model.modules]
--- local word_embedder = model:findModules('nn.LookupTable')[1]
+encoder = model:findModules('nn.Sequential')[3]
+-- decoder = model.modules[#model.modules]
+-- word_embedder = model:findModules('nn.LookupTable')[1]
 
 -- print(encoder)
 -- print(decoder)
 
 -- we'll just use this for the vocab mappings
-local loader = Loader.create(opt.datasetdir, 'val', opt.n_context, opt.n_skip, opt.n_predict)
+loader = Loader.create(opt.datasetdir, 'val', 10, 10, 10)
 
--- local inputs = {}
+-- inputs = {}
 -- for _, word in ipairs(context_string:split(' ')) do
 --     table.insert(inputs, loader.word_mappings[word])
 -- end
 
 
-local input_index = math.random(1, loader.data:size(1))
-local input, _ = loader:load_batch_table(input_index)
-if opt.gpu then
-    input = {
-            input[1]:cuda(),
-            input[2]:cuda(),
-        }
+-- input_index = math.random(1, loader.data:size(1))
+
+if context_string then
+    input_index = -1
+    inputs = {}
+    for _, word in ipairs(context_string:split(' ')) do
+        table.insert(inputs, loader.word_mappings[word])
+    end
+
+    input = torch.Tensor(inputs):reshape(1, #inputs)
+else
+    input_index = 100
+
+    input, _ = loader:load_batch_table(input_index)
+    input = input[1]
+    if opt.gpu then
+        input = input:cuda()
+    end
 end
 
-print(input)
+print("Finding the nearest neighbor for:")
+for i = 1, input:size(2) do
+    io.write(loader.inverse_word_mappings[input[1][i] ], ' ')
+end
+print('')
 
-local encoded_input = encoder:forward(input)
+encoded_input = encoder:forward(input):clone()
 
-local nearest_neighbor = nil
-local nearest_distance = math.huge
+-- [[
+nearest_neighbor = nil
+nearest_distance = math.huge
 for i = 1, loader.data:size(1) do
-    if not i == input_index then
-        local current_input, _ = loader:load_batch_table(i)
+-- for i = 1, 100 do
+    if i ~= input_index then
+        -- print("Neighbor: "..i..'/'..loader.data:size(1))
+        current_input, _ = loader:load_batch_table(i)
+        current_input = current_input[1]
         if opt.gpu then
-            current_input = {
-                    current_input[1]:cuda(),
-                    current_input[2]:cuda(),
-                }
+            current_input = current_input:cuda()
         end
 
-        current_encoding = encoder:forward(input)
+        current_encoding = encoder:forward(current_input)
+        -- print('current_encoding: ', current_encoding)
         current_distance = (encoded_input - current_encoding):norm()
+        -- print('current_distance: ', current_distance)
 
         if current_distance < nearest_distance then
             nearest_neighbor = current_input
@@ -81,11 +103,14 @@ for i = 1, loader.data:size(1) do
 end
 
 print("Input phrase:")
-for i = 1, input:size(1) do
-    print(loader.inverse_word_mappings[input[i]])
+for i = 1, input:size(2) do
+    io.write(loader.inverse_word_mappings[input[1][i] ], ' ')
 end
+print('')
 
 print("Nearest neighbor:")
-for i = 1, nearest_neighbor:size(1) do
-    print(loader.inverse_word_mappings[nearest_neighbor[i]])
+for i = 1, nearest_neighbor:size(2) do
+    io.write(loader.inverse_word_mappings[nearest_neighbor[1][i] ], ' ')
 end
+print('')
+--]]
