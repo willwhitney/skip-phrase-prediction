@@ -1,0 +1,304 @@
+Input phrase:
+he found that a pair of rampant boys , a
+Nearest neighbor:
+of a cowslip that bent above the brook , a
+
+Input phrase:
+every morning , in her little wrapper , trotted to
+Nearest neighbor:
+, and encouraged by this fact , she resolved to
+
+Input phrase:
+, with you to show me how nice it is
+Nearest neighbor:
+, and you may help yourself to your heart 's
+
+Input phrase:
+goose to wear it . '' `` <UNK> it round
+Nearest neighbor:
+romance in the world . '' `` <UNK> and sheep
+
+Input phrase:
+, and knew from what Jamila had told him that
+Nearest neighbor:
+all the apples , begging as he did so that
+
+Input phrase:
+again . Laurie winked at this prank ; I know
+Nearest neighbor:
+asked her a thousand already . I suppose I had
+
+Input phrase:
+that whoever could bring him a dozen of the finest
+Nearest neighbor:
+soon as his poor mother was out of the way
+
+Input phrase:
+paused out of breath with this startling beginning . ``
+Nearest neighbor:
+the top crust put on with breathless care . ``
+
+Input phrase:
+had all gone to bed . Then , as she
+Nearest neighbor:
+. When Tilly opened the door next morning , she
+
+Input phrase:
+stood erect , and the streamers waved in the breeze
+Nearest neighbor:
+ever been thrown before , and fell in the crowd
+
+Input phrase:
+` You had a narrow escape that time , '
+Nearest neighbor:
+` It seems frightfully real to me too , '
+
+Input phrase:
+? '' `` Oh ! no , '' said Miranda
+Nearest neighbor:
+not ? '' `` I do , '' said Scrooge
+
+Input phrase:
+he does n't -- but it spoiled my day .
+Nearest neighbor:
+as good as falsehood ? I want to know .
+
+Input phrase:
+knife dipped in milk , and put in the oven
+Nearest neighbor:
+his bank-note , and sent it sailing on the Serpentine
+
+Input phrase:
+down on the rock , while fifty <UNK> herring were
+Nearest neighbor:
+, which was the <UNK> , delicately drawn with indelible
+
+Input phrase:
+<UNK> than even Miss Lavendar 's stone house . ''
+Nearest neighbor:
+Anne . <UNK> were made to sleep in . ''
+
+Input phrase:
+? ' says the Queen . ` It will take
+Nearest neighbor:
+Christian , ' said George . ` Let us take
+
+Input phrase:
+we shall have to wait the arrival of the hermit
+Nearest neighbor:
+will be to see all the organs in their places
+
+Input phrase:
+on like a tunnel for some way , and then
+Nearest neighbor:
+a bat or so over the head , and then
+
+Input phrase:
+Joshua 's <UNK> , or Raphael 's Madonnas , and
+Nearest neighbor:
+, and can plan railroads , and <UNK> , and
+
+Input phrase:
+said : -- `` Dear Queen , we have bent
+Nearest neighbor:
+play place for our children ! There 's a fine
+
+Input phrase:
+<UNK> , or to wander along the beach toward Castle
+Nearest neighbor:
+high state of tickle , proclaimed to the hidden rogue
+
+Input phrase:
+no such thing ; they are her natural exasperation ,
+Nearest neighbor:
+of her life to ` get lots of schooling ,
+
+Input phrase:
+it behind him , and in a twinkling twenty miles
+Nearest neighbor:
+while , and at last decided to make an island
+
+Input phrase:
+would have happened after that tender whisper I tremble to
+Nearest neighbor:
+just to show that noodle that I prefer nature to
+
+Input phrase:
+, who was very old herself , declared that there
+Nearest neighbor:
+care about looking after his country , and seeing that
+
+Input phrase:
+`` by and by . '' Now she knew the
+Nearest neighbor:
+spinsters are to be envied . '' She told them
+
+Input phrase:
+may eat you . ' ` Very well , '
+Nearest neighbor:
+he set you ? ' ` For to-morrow , '
+
+Input phrase:
+house , ca n't he ? '' `` Yes ,
+Nearest neighbor:
+I do about it ? '' `` Tell uncle ,
+
+Input phrase:
+making sweet music on their harps . When they saw
+Nearest neighbor:
+stood on the ground before them . When they had
+
+Input phrase:
+'' said the young captain , `` order your daughter
+Nearest neighbor:
+'' replied the oak bitingly , `` how deliciously cosy
+
+Input phrase:
+and was going down the aisle covered , when a
+Nearest neighbor:
+Almas walked on through the garden , when suddenly a
+
+Input phrase:
+marry her , but he knew that she would never
+Nearest neighbor:
+him to stay with her , or something dreadful would
+
+Input phrase:
+door-steps , or inspecting Bab 's <UNK> by standing on
+Nearest neighbor:
+an agent for <UNK> implements and a prominent personage in
+
+Input phrase:
+it 's very natural to wish them to be brilliant
+Nearest neighbor:
+say sarcastic things to the folks that come to see
+
+Input phrase:
+`` Eat that cake up just as fast as ever
+Nearest neighbor:
+does n't seem as out of the world as it
+
+Input phrase:
+to the bowl and the lance , no one knows
+Nearest neighbor:
+enjoyed the joke , and one after the other read
+
+Input phrase:
+. ' ` It is my lord , the Wind
+Nearest neighbor:
+host . ` Bring us three dishes , the nicest
+
+Input phrase:
+that she need n't expect him to eat any porridge
+Nearest neighbor:
+and she would n't have him tormented . His attention
+
+Input phrase:
+fiddler ; ` you must only do exactly as I
+Nearest neighbor:
+the streets crying , ` Who will hire me for
+
+Input phrase:
+, King <UNK> . ` Your son , Prince Tahmasp
+Nearest neighbor:
+of Humpty Dumpty . ` Too late ! Too late
+
+Input phrase:
+he scrambled out . On the way it said to
+Nearest neighbor:
+King of the Snakes . And Hassebu said to the
+
+Input phrase:
+. They had come to a clear and distinct understanding
+Nearest neighbor:
+to take . They were no longer able to hope
+
+Input phrase:
+. The captain landed upon the shore and began to
+Nearest neighbor:
+whither . The unhappy father searched the country for miles
+
+Input phrase:
+, I will , if I can do nothing ;
+Nearest neighbor:
+Rose , I must warn you of one thing ;
+
+Input phrase:
+traveler , a shrill voice called , `` <UNK> !
+Nearest neighbor:
+have lots of room here ! <UNK> , Dick !
+
+Input phrase:
+to and fro all the afternoon , to Fun 's
+Nearest neighbor:
+the kettle any more , so after a little bargaining
+
+Input phrase:
+. Next morning he was brought bound before the king
+Nearest neighbor:
+heart melted ; he was sorry for all the evil
+
+Input phrase:
+that will take full eight hundred years longer . Stay
+Nearest neighbor:
+it , lest you should lose your sight . A
+
+Input phrase:
+transported with joy . They broke above a dozen laces
+Nearest neighbor:
+suggestive of great strength and endurance ; a clean-shaven face
+
+Input phrase:
+<UNK> . I know papa would wish it , so
+Nearest neighbor:
+women . I 'm far from it now , but
+
+Input phrase:
+am sure it is he , for on looking back
+Nearest neighbor:
+a good and kind man , quite content with his
+
+Input phrase:
+the wants of those about her , never lent an
+Nearest neighbor:
+troubles of that night for her , seemed to touch
+
+Input phrase:
+, '' she added , caressing the yellow heads as
+Nearest neighbor:
+'' laughed Aunt Jessie , as the children shouted over
+
+Input phrase:
+with you , ' said he angrily . A little
+Nearest neighbor:
+me , ' said the youth . By this time
+
+Input phrase:
+her father for her sudden disappearance . Percinet at first
+Nearest neighbor:
+upon her head . When she saw what a figure
+
+Input phrase:
+especially just now when Gilbert is so busy . He
+Nearest neighbor:
+rather quiet for him here , you know . He
+
+Input phrase:
+is <UNK> , so no more at this time .
+Nearest neighbor:
+understand college students are great sinners in this respect .
+
+Input phrase:
+so she starved . `` For a while she worked
+Nearest neighbor:
+the old King . `` Because she does nothing but
+
+Input phrase:
+fight , since he had no armour of his own
+Nearest neighbor:
+He looked about in that very place for his own
+
+Input phrase:
+of a help if you only knew a little .
+Nearest neighbor:
+tell me how a fellow can earn some money .

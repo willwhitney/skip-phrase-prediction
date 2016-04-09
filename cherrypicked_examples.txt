@@ -1,0 +1,28 @@
+Input phrase:
+knife dipped in milk , and put in the oven
+
+Skip 0:
+ever been thrown before , and fell in the crowd
+
+Skip 10:
+spoon , and after spreading it in the sun till
+
+
+Input phrase:
+no such thing ; they are her natural exasperation ,
+
+Skip 0:
+; but her house is three hundred miles off ,
+
+Skip 10:
+such thing ; they are her natural exasperation , because
+
+
+Input phrase:
+making sweet music on their harps . When they saw
+
+Skip 0:
+sail for the magician 's country . When they reached
+
+Skip 10:
+that felt soft and pleasant . When they were ready

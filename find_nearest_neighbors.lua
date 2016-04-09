@@ -83,6 +83,34 @@ function embed_string(s)
     return string_tensor, encoder:forward(string_tensor):clone()
 end
 
+function distance(i1, i2)
+    if type(i1) == 'number' then
+        encoded_i1 = embeddings[i1]
+        i1 = get_input(i1)
+    else
+        i1, encoded_i1 = embed_string(i1)
+    end
+    if type(i2) == 'number' then
+        encoded_i2 = embeddings[i2]
+        i2 = get_input(i2)
+    else
+        i2, encoded_i2 = embed_string(i2)
+    end
+
+    print("Finding the distance between:")
+    for i = 1, i1:size(2) do
+        io.write(loader.inverse_word_mappings[i1[1][i] ], ' ')
+    end
+    print('')
+
+    print("and:")
+    for i = 1, i2:size(2) do
+        io.write(loader.inverse_word_mappings[i2[1][i] ], ' ')
+    end
+    print('')
+
+    return (encoded_i1 - encoded_i2):norm()
+end
 
 
 -- encoded_input = encoder:forward(input):clone()
